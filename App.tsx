@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import PlayerQuadrant from './components/PlayerQuadrant';
 import CenterHub from './components/CenterHub';
+import MissionSetupModal from './components/MissionSetupModal';
 import { Player, ResourceType, Theme } from './types';
 
 const INITIAL_RESOURCES = {
@@ -46,7 +46,7 @@ function App() {
     );
   };
 
-  const handleNewGame = (playerCount: number) => {
+  const handleNewGame = (playerCount: number, playerNames: Record<number, string>) => {
     // Logic to activate players based on count
     // 4 Players: All
     // 3 Players: 1, 2, 3
@@ -57,11 +57,25 @@ function App() {
     else if (playerCount === 3) activeIds = [1, 2, 3];
     else activeIds = [1, 3]; // 2 players
 
-    setPlayers(prev => prev.map(p => ({
-        ...p,
-        resources: { ...INITIAL_RESOURCES },
-        isActive: activeIds.includes(p.id)
-    })));
+    setPlayers(prev => prev.map(p => {
+        const customName = playerNames[p.id];
+        let defaultName = '';
+        switch(p.id) {
+            case 1: defaultName = 'SECTOR SOUTH'; break;
+            case 2: defaultName = 'SECTOR WEST'; break;
+            case 3: defaultName = 'SECTOR NORTH'; break;
+            case 4: defaultName = 'SECTOR EAST'; break;
+        }
+
+        return {
+            ...p,
+            resources: { ...INITIAL_RESOURCES },
+            isActive: activeIds.includes(p.id),
+            name: (customName && customName.trim() !== '') ? customName : defaultName
+        };
+    }));
+    
+    setIsSetupOpen(false);
   };
 
   const getPlayer = (id: number) => players.find(p => p.id === id)!;
@@ -69,11 +83,11 @@ function App() {
   return (
     <div className={`relative w-screen h-screen overflow-hidden flex flex-col transition-colors duration-300 ${theme === 'dark' ? 'bg-black' : 'bg-gray-100'}`}>
       
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         
         {/* TOP HALF - "Away Team" */}
-        <div className={`flex-1 flex flex-row border-b-2 ${theme === 'dark' ? 'border-neutral-900' : 'border-gray-300'}`}>
-             <div className={`flex-1 ${theme === 'dark' ? 'border-r border-neutral-900' : 'border-r border-gray-300'}`}>
+        <div className={`flex-1 flex flex-row border-b-[12px] min-h-0 ${theme === 'dark' ? 'border-neutral-900' : 'border-gray-300'}`}>
+             <div className={`flex-1 border-r-[12px] ${theme === 'dark' ? 'border-neutral-900' : 'border-gray-300'}`}>
                  <PlayerQuadrant 
                     player={getPlayer(2)} 
                     onUpdateResource={handleUpdateResource}
@@ -92,8 +106,8 @@ function App() {
         </div>
 
         {/* BOTTOM HALF - "Home Team" */}
-        <div className="flex-1 flex flex-row">
-             <div className={`flex-1 ${theme === 'dark' ? 'border-r border-neutral-900' : 'border-r border-gray-300'}`}>
+        <div className="flex-1 flex flex-row min-h-0">
+             <div className={`flex-1 border-r-[12px] ${theme === 'dark' ? 'border-neutral-900' : 'border-gray-300'}`}>
                  <PlayerQuadrant 
                     player={getPlayer(1)} 
                     onUpdateResource={handleUpdateResource}
@@ -112,13 +126,19 @@ function App() {
         </div>
       </div>
 
+      {/* Setup Modal */}
+      <MissionSetupModal
+        isOpen={isSetupOpen}
+        onLaunch={handleNewGame}
+        theme={theme}
+        setTheme={setTheme}
+      />
+
       {/* Central Hub Button */}
       <CenterHub 
         theme={theme} 
         setTheme={setTheme} 
-        onNewGame={handleNewGame}
-        forceOpen={isSetupOpen}
-        onCloseSetup={() => setIsSetupOpen(false)}
+        onShowSetup={() => setIsSetupOpen(true)}
       />
     </div>
   );
