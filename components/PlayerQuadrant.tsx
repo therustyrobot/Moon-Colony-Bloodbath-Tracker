@@ -144,6 +144,7 @@ const PlayerQuadrant: React.FC<PlayerQuadrantProps> = ({ player, onUpdateResourc
                   onPointerDown={() => handlePressStart(resType, -1)}
                   onPointerUp={handlePressEnd}
                   onPointerLeave={handlePressEnd}
+                  onContextMenu={(e) => e.preventDefault()}
                   aria-label={`Decrease ${config.label}`}
                 >
                   <Minus className={`w-4 h-4 lg:w-12 lg:h-12 ${theme === 'dark' ? 'text-neutral-500' : 'text-gray-400'} group-hover:text-red-500 transition-colors`} />
@@ -168,6 +169,7 @@ const PlayerQuadrant: React.FC<PlayerQuadrantProps> = ({ player, onUpdateResourc
                   onPointerDown={() => handlePressStart(resType, 1)}
                   onPointerUp={handlePressEnd}
                   onPointerLeave={handlePressEnd}
+                  onContextMenu={(e) => e.preventDefault()}
                   aria-label={`Increase ${config.label}`}
                 >
                   <Plus className={`w-4 h-4 lg:w-12 lg:h-12 ${theme === 'dark' ? 'text-neutral-500' : 'text-gray-400'} group-hover:text-emerald-500 transition-colors`} />
