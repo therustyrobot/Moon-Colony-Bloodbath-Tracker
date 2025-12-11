@@ -17,9 +17,3 @@ export interface Player {
   rotation: number;
   isActive: boolean;
 }
-
-export interface CrisisEvent {
-  title: string;
-  description: string;
-  effect: string;
-}

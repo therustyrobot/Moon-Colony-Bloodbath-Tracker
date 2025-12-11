@@ -1,5 +1,5 @@
 {
   "name": "Moon Colony Bloodbath Tracker",
-  "description": "A 4-player resource tracker for the board game Moon Colony Bloodbath, featuring rotating quadrants for table play and an AI crisis generator.",
+  "description": "A 4-player resource tracker for the board game Moon Colony Bloodbath, featuring rotating quadrants for table play.",
   "requestFramePermissions": []
 }
